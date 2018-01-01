@@ -60,5 +60,18 @@ public class QuizActivity extends AppCompatActivity {
 
             }
         });
+        //This is my brand new next button
+        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                int question = mQuestionBank[mCurrentIndex].getTextResId();
+                mQuestionTextView.setText(question);
+
+            }
+
+        });
     }
 }
