@@ -2,7 +2,6 @@ package com.example.terre.geoquiznew;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,46 +31,67 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question);
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length; //so the next button does not go out of bounds.
+                updateQuestion();
+            }
+        });
+
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
 
         mTrueButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                Toast aToast = Toast.makeText(QuizActivity.this, R.string.correct_toast,
-                        Toast.LENGTH_SHORT);
-                aToast.setGravity(Gravity.TOP,0,250);// This changes the default toast from the bottom to the top of the screen
-                aToast.show();
-
+            @Override
+            public void onClick(View v) {
+                checkAnswer(true);
             }
-
         });
+
+
+
 
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast aToast = Toast.makeText(QuizActivity.this,
-                        R.string.incorrect_toast, Toast.LENGTH_SHORT);
-                aToast.setGravity(Gravity.TOP,0,250 );
-                aToast.show();
-
-
+                checkAnswer(false);
             }
         });
+
+
         //This is my brand new next button
         mNextButton = (Button) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                int question = mQuestionBank[mCurrentIndex].getTextResId();
-                mQuestionTextView.setText(question);
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length; //so the next button does not go out of bounds.
+               updateQuestion();
 
             }
 
         });
+        updateQuestion();
+    }
+
+    private void updateQuestion() {
+        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
+    }
+
+    private void checkAnswer(boolean userPressedTrue) {
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+
+        int messageResId = 0;
+
+        if (userPressedTrue == answerIsTrue) {
+            messageResId = R.string.correct_toast;
+        } else {
+            messageResId = R.string.incorrect_toast;
+        }
+
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
 }
