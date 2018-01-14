@@ -13,6 +13,9 @@ import android.widget.Toast;
 public class QuizActivity extends AppCompatActivity {
     private static final String TAG ="QuizActivity";
 
+    //save state of the activity to survive device rotation
+    private static final String KEY_INDEX = "index";
+
     private Button mTrueButton;
     private Button mFalseButton;
     private ImageButton mNextButton;
@@ -36,6 +39,11 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
+
+
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
 
         //adds next button functionality to the text view.
@@ -45,6 +53,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length; //so the next button does not go out of bounds.
                 updateQuestion();
+
             }
 
 
@@ -121,11 +130,21 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onPause() called");
     }
 
+    //Save the device state to survive rotations
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+    }
+
+
     @Override
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop() called");
     }
+
 
     @Override
     public void onDestroy(){
