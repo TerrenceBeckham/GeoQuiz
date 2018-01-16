@@ -39,11 +39,10 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
-
-
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
         }
+
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
 
         //adds next button functionality to the text view.
@@ -53,11 +52,9 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length; //so the next button does not go out of bounds.
                 updateQuestion();
-
             }
-
-
         });
+
 
 
         mTrueButton = (Button) findViewById(R.id.true_button);
@@ -84,12 +81,10 @@ public class QuizActivity extends AppCompatActivity {
         //This is my brand new next button
         mNextButton = (ImageButton) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length; //so the next button does not go out of bounds.
                updateQuestion();
-
             }
 
         });
@@ -153,8 +148,8 @@ public class QuizActivity extends AppCompatActivity {
 
     }
 
-
     private void updateQuestion() {
+       //Log.d(TAG, "Updating question text", new Exception());
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
@@ -162,7 +157,7 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
-        int messageResId = 0;
+        int messageResId;
 
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
